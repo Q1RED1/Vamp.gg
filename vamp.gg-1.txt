@@ -1,0 +1,258 @@
+local gui = Instance.new("ScreenGui")
+gui.Name = "CustomGUI"
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 455, 0, 280)
+mainFrame.Position = UDim2.new(0.5, -227, 0.5, -140)
+mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mainFrame.Parent = gui
+
+local mainFrameStroke = Instance.new("UIStroke")
+mainFrameStroke.Color = Color3.fromRGB(255, 0, 0)
+mainFrameStroke.Parent = mainFrame
+
+local mainFrameCorner = Instance.new("UICorner")
+mainFrameCorner.CornerRadius = UDim.new(0, 8)
+mainFrameCorner.Parent = mainFrame
+
+-- Topbar
+local topbar = Instance.new("Frame")
+topbar.Size = UDim2.new(0, 455, 0, 20)
+topbar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+topbar.Parent = mainFrame
+
+local topbarStroke = Instance.new("UIStroke")
+topbarStroke.Color = Color3.fromRGB(255, 0, 0)
+topbarStroke.Parent = topbar
+
+local topbarCorner = Instance.new("UICorner")
+topbarCorner.CornerRadius = UDim.new(0, 8)
+topbarCorner.Parent = topbar
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 1, 0)
+title.Text = "vamp.gg"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.Sarpanch
+title.TextSize = 14
+title.Parent = topbar
+
+-- Tabs
+local tabs = {"Legit", "Rage", "misc"}
+local tabFrames = {}
+
+for i, tabName in ipairs(tabs) do
+    local tabButton = Instance.new("TextButton")
+    tabButton.Size = UDim2.new(0, 150, 0, 20)
+    tabButton.Position = UDim2.new(0, (i-1)*150, 0, 20)
+    tabButton.Text = tabName
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    tabButton.Font = Enum.Font.Sarpanch
+    tabButton.TextSize = 14
+    tabButton.Parent = mainFrame
+
+    local tabButtonCorner = Instance.new("UICorner")
+    tabButtonCorner.CornerRadius = UDim.new(0, 8)
+    tabButtonCorner.Parent = tabButton
+
+    local tabFrame = Instance.new("ScrollingFrame")
+    tabFrame.Size = UDim2.new(1, 0, 1, -40)
+    tabFrame.Position = UDim2.new(0, 0, 0, 40)
+    tabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    tabFrame.Visible = i == 1
+    tabFrame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Adjust based on content
+    tabFrame.ScrollBarThickness = 6
+    tabFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)
+    tabFrame.Parent = mainFrame
+
+    local tabFrameCorner = Instance.new("UICorner")
+    tabFrameCorner.CornerRadius = UDim.new(0, 8)
+    tabFrameCorner.Parent = tabFrame
+
+    tabFrames[tabName] = tabFrame
+
+    tabButton.MouseButton1Click:Connect(function()
+        for _, frame in pairs(tabFrames) do
+            frame.Visible = false
+        end
+        tabFrame.Visible = true
+    end)
+end
+
+-- Section Function
+local function createSection(parent, sectionTitle)
+    local section = Instance.new("Frame")
+    section.Size = UDim2.new(1, -10, 0, 30)
+    section.Position = UDim2.new(0, 5, 0, 0)
+    section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    section.Parent = parent
+
+    local sectionCorner = Instance.new("UICorner")
+    sectionCorner.CornerRadius = UDim.new(0, 8)
+    sectionCorner.Parent = section
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -10, 1, -10)
+    titleLabel.Position = UDim2.new(0, 5, 0, 5)
+    titleLabel.Text = sectionTitle
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.Font = Enum.Font.Sarpanch
+    titleLabel.TextSize = 14
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Parent = section
+
+    return section
+end
+
+-- Toggle Function
+local function createToggle(parent, text, callback)
+    local toggle = Instance.new("TextButton")
+    toggle.Size = UDim2.new(0, 100, 0, 25)
+    toggle.Text = text
+    toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggle.Font = Enum.Font.Sarpanch
+    toggle.TextSize = 14
+    toggle.Parent = parent
+
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(0, 8)
+    toggleCorner.Parent = toggle
+
+    local isOn = false
+    toggle.MouseButton1Click:Connect(function()
+        isOn = not isOn
+        toggle.Text = text .. (isOn and " ON" or " OFF")
+        callback(isOn)
+    end)
+end
+
+-- Button Function
+local function createButton(parent, text, callback)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 100, 0, 25)
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    button.Font = Enum.Font.Sarpanch
+    button.TextSize = 14
+    button.Parent = parent
+
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 8)
+    buttonCorner.Parent = button
+
+    button.MouseButton1Click:Connect(callback)
+end
+
+-- Textbox Function
+local function createTextbox(parent, placeholderText, callback)
+    local textbox = Instance.new("TextBox")
+    textbox.Size = UDim2.new(0, 100, 0, 25)
+    textbox.PlaceholderText = placeholderText
+    textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textbox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    textbox.Font = Enum.Font.Sarpanch
+    textbox.TextSize = 14
+    textbox.PlaceholderColor3 = Color3.fromRGB(200, 200, 200)
+    textbox.Parent = parent
+
+    local textboxCorner = Instance.new("UICorner")
+    textboxCorner.CornerRadius = UDim.new(0, 8)
+    textboxCorner.Parent = textbox
+
+    textbox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            callback(textbox.Text)
+        end
+    end)
+end
+
+-- Keybind Function
+local function createKeybind(parent, key, callback)
+    local keybindButton = Instance.new("TextButton")
+    keybindButton.Size = UDim2.new(0, 100, 0, 25)
+    keybindButton.Text = "Keybind: " .. key
+    keybindButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    keybindButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    keybindButton.Font = Enum.Font.Sarpanch
+    keybindButton.TextSize = 14
+    keybindButton.Parent = parent
+
+    local keybindButtonCorner = Instance.new("UICorner")
+    keybindButtonCorner.CornerRadius = UDim.new(0, 8)
+    keybindButtonCorner.Parent = keybindButton
+
+    local userInputService = game:GetService("UserInputService")
+    userInputService.InputBegan:Connect(function(input, gameProcessed)
+        if not gameProcessed and input.KeyCode == Enum.KeyCode[key] then
+            callback()
+        end
+    end)
+end
+
+-- Adding UI Elements to Tab1 as an Example
+local section1 = createSection(tabFrames["Tab1"], "Controls")
+section1.Position = UDim2.new(0, 0, 0, 10)
+createToggle(section1, "Toggle Example", function(state)
+    print("Toggle state: " .. tostring(state))
+end)
+
+local section2 = createSection(tabFrames["Tab1"], "Actions")
+section2.Position = UDim2.new(0, 0, 0, 50)
+createButton(section2, "Button Example", function() 
+    print("Button clicked")
+end)
+
+local section3 = createSection(tabFrames["Tab1"], "Inputs")
+section3.Position = UDim2.new(0, 0, 0, 90)
+createTextbox(section3, "Enter text", function(text) 
+    print("Textbox input: " .. text)
+end)
+
+local section4 = createSection(tabFrames["Tab1"], "Keybinds")
+section4.Position = UDim2.new(0, 0, 0, 130)
+createKeybind(section4, "F", function() 
+    print("Keybind activated")
+end)
+
+-- Draggable Functionality
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+topbar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+topbar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
