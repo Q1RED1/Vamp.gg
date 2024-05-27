@@ -1,3 +1,39 @@
+-- Define a table to store whitelisted HWIDs
+-- 1=qzxred
+-- 2=
+-- 3=
+-- 4=
+local whitelist = {
+    ["1fbc2289-1f18-48c4-9b51-4a6001c8bbfe"] = true,
+    [""] = true,
+    [""] = true,
+    [""] = true,
+    [""] = true,
+    [""] = true,
+    [""] = true,
+    -- Add more trusted HWIDs as needed
+}
+
+-- Function to check if a HWID is whitelisted
+local function isWhitelisted(hwid)
+    return whitelist[hwid] or false
+end
+
+-- Function to handle access denial
+local function handleAccessDenied(hwid)
+    print("Access denied for HWID:", hwid)
+    -- You can implement further actions here, such as logging or notifications
+end
+
+-- Main function to process HWID
+local function processHWID(hwid)
+    if isWhitelisted(hwid) then
+        print("Access granted for HWID:", hwid)
+        -- Your application logic for granting access goes here
+    else
+        handleAccessDenied(hwid)
+    end
+end
 local gui = Instance.new("ScreenGui")
 gui.Name = "CustomGUI"
 gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
